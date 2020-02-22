@@ -6,11 +6,11 @@ const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
 
 const state = {
-  theme: getSetting("theme") || variables.theme,
+  theme: getSetting("theme") == null ? variables.theme : getSetting("theme"),
   showSettings: showSettings,
-  tagsView: getSetting("tagsView") || tagsView,
-  fixedHeader: getSetting("fixedHeader") || fixedHeader,
-  sidebarLogo: getSetting("sidebarLogo") || sidebarLogo
+  tagsView: getSetting("tagsView") == null ? tagsView : getSetting("tagsView"),
+  fixedHeader: getSetting("fixedHeader") == null ? fixedHeader : getSetting("fixedHeader"),
+  sidebarLogo: getSetting("sidebarLogo") == null ? sidebarLogo : getSetting("sidebarLogo")
 }
 
 const mutations = {

@@ -5,7 +5,10 @@
 
       <div class="drawer-item">
         <span>主题色</span>
-        <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
+        <theme-picker
+          style="float: right;height: 26px;margin: -3px 8px 0 0;"
+          @change="themeChange"
+        />
       </div>
 
       <div class="drawer-item">
@@ -22,63 +25,65 @@
         <span>显示LOGO</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
-
+    </div>
+    <div style="margin-top:25px;">
+      <el-button plain style="width:100%"><i class="el-icon-position"></i>恢复默认设置</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
+import ThemePicker from "@/components/ThemePicker";
 
 export default {
   components: { ThemePicker },
   data() {
-    return {}
+    return {};
   },
   computed: {
     fixedHeader: {
       get() {
-        return this.$store.state.settings.fixedHeader
+        return this.$store.state.settings.fixedHeader;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'fixedHeader',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "fixedHeader",
           value: val
-        })
+        });
       }
     },
     tagsView: {
       get() {
-        return this.$store.state.settings.tagsView
+        return this.$store.state.settings.tagsView;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'tagsView',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "tagsView",
           value: val
-        })
+        });
       }
     },
     sidebarLogo: {
       get() {
-        return this.$store.state.settings.sidebarLogo
+        return this.$store.state.settings.sidebarLogo;
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'sidebarLogo',
+        this.$store.dispatch("settings/changeSetting", {
+          key: "sidebarLogo",
           value: val
-        })
+        });
       }
     }
   },
   methods: {
     themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'theme',
+      this.$store.dispatch("settings/changeSetting", {
+        key: "theme",
         value: val
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -90,19 +95,19 @@ export default {
 
   .drawer-title {
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, .85);
+    color: rgba(0, 0, 0, 0.85);
     font-size: 14px;
     line-height: 22px;
   }
 
   .drawer-item {
-    color: rgba(0, 0, 0, .65);
+    color: rgba(0, 0, 0, 0.65);
     font-size: 14px;
     padding: 12px 0;
   }
 
   .drawer-switch {
-    float: right
+    float: right;
   }
 }
 </style>
