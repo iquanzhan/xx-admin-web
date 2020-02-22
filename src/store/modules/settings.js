@@ -19,12 +19,22 @@ const mutations = {
       setSetting(key, value);
       state[key] = getSetting(key);
     }
-  }
+  },
+  RESET_SETTING: (state) => {
+    removeSetting();
+  },
 }
 
 const actions = {
   changeSetting({ commit }, data) {
     commit('CHANGE_SETTING', data)
+  },
+  resetSetting({ commit }) {
+    commit('RESET_SETTING');
+    state["theme"] = variables.theme;
+    state["tagsView"] = tagsView;
+    state["fixedHeader"] = fixedHeader;
+    state["sidebarLogo"] = sidebarLogo;
   }
 }
 

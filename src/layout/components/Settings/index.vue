@@ -27,7 +27,9 @@
       </div>
     </div>
     <div style="margin-top:25px;">
-      <el-button plain style="width:100%"><i class="el-icon-position"></i>恢复默认设置</el-button>
+      <el-button plain style="width:100%" @click="resetGlobalSettings">
+        <i class="el-icon-position"></i>恢复默认设置
+      </el-button>
     </div>
   </div>
 </template>
@@ -81,6 +83,10 @@ export default {
         key: "theme",
         value: val
       });
+    },
+    //恢复默认主题设置
+    resetGlobalSettings() {
+      this.$store.dispatch("settings/resetSetting");
     }
   }
 };
