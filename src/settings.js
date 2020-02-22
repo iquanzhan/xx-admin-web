@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'XXADMIN 通用权限管理系统',
+  title: 'XXADMIN閫氱敤鏉冮檺绠＄悊绯荤粺',
 
   /**
    * @type {boolean} true | false
