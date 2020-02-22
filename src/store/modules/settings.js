@@ -1,20 +1,23 @@
 import variables from '@/styles/element-variables.scss'
 import defaultSettings from '@/settings'
+import { getSetting, setSetting, removeSetting } from '@/utils/global-settings'
 
 const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
+
 const state = {
-  theme: variables.theme,
+  theme: getSetting("theme") || variables.theme,
   showSettings: showSettings,
-  tagsView: tagsView,
-  fixedHeader: fixedHeader,
-  sidebarLogo: sidebarLogo
+  tagsView: getSetting("tagsView") || tagsView,
+  fixedHeader: getSetting("fixedHeader") || fixedHeader,
+  sidebarLogo: getSetting("sidebarLogo") || sidebarLogo
 }
 
 const mutations = {
   CHANGE_SETTING: (state, { key, value }) => {
     if (state.hasOwnProperty(key)) {
-      state[key] = value
+      setSetting(key, value);
+      state[key] = getSetting(key);
     }
   }
 }
