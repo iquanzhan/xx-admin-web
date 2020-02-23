@@ -4,25 +4,24 @@ import { getSetting, setSetting, removeSetting } from '@/utils/global-settings'
 
 const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
-
 const state = {
-  theme: getSetting("theme") == null ? variables.theme : getSetting("theme"),
+  theme: getSetting('theme') == null ? variables.theme : getSetting('theme'),
   showSettings: showSettings,
-  tagsView: getSetting("tagsView") == null ? tagsView : getSetting("tagsView"),
-  fixedHeader: getSetting("fixedHeader") == null ? fixedHeader : getSetting("fixedHeader"),
-  sidebarLogo: getSetting("sidebarLogo") == null ? sidebarLogo : getSetting("sidebarLogo")
+  tagsView: getSetting('tagsView') == null ? tagsView : getSetting('tagsView'),
+  fixedHeader: getSetting('fixedHeader') == null ? fixedHeader : getSetting('fixedHeader'),
+  sidebarLogo: getSetting('sidebarLogo') == null ? sidebarLogo : getSetting('sidebarLogo')
 }
 
 const mutations = {
   CHANGE_SETTING: (state, { key, value }) => {
     if (state.hasOwnProperty(key)) {
-      setSetting(key, value);
-      state[key] = getSetting(key);
+      setSetting(key, value)
+      state[key] = getSetting(key)
     }
   },
   RESET_SETTING: (state) => {
-    removeSetting();
-  },
+    removeSetting()
+  }
 }
 
 const actions = {
@@ -30,11 +29,11 @@ const actions = {
     commit('CHANGE_SETTING', data)
   },
   resetSetting({ commit }) {
-    commit('RESET_SETTING');
-    state["theme"] = variables.theme;
-    state["tagsView"] = tagsView;
-    state["fixedHeader"] = fixedHeader;
-    state["sidebarLogo"] = sidebarLogo;
+    commit('RESET_SETTING')
+    state['theme'] = variables.theme
+    state['tagsView'] = tagsView
+    state['fixedHeader'] = fixedHeader
+    state['sidebarLogo'] = sidebarLogo
   }
 }
 

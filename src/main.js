@@ -20,9 +20,9 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
-//引入moment
-import moment from 'moment'//导入文件 
-Vue.prototype.$moment = moment;//赋值使用
+// 引入moment
+import moment from 'moment'// 导入文件
+Vue.prototype.$moment = moment// 赋值使用
 
 /**
  * If you don't want to use mock-server

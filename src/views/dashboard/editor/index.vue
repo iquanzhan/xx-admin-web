@@ -10,46 +10,46 @@
         <span class="display_name">{{ name }}</span>
         <span style="font-size:20px;padding-top:20px;display:inline-block;">
           欢迎登录，
-          <span v-text="timeSpanText"></span>！
+          <span v-text="timeSpanText" />！
         </span>
       </div>
     </div>
     <div>
-      <img :src="emptyGif" class="emptyGif" />
+      <img :src="emptyGif" class="emptyGif">
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import PanThumb from "@/components/PanThumb";
-import GithubCorner from "@/components/GithubCorner";
+import { mapGetters } from 'vuex'
+import PanThumb from '@/components/PanThumb'
+import GithubCorner from '@/components/GithubCorner'
 
 export default {
-  name: "DashboardEditor",
+  name: 'DashboardEditor',
   components: { PanThumb, GithubCorner },
   data() {
     return {
-      emptyGif: "./images/dashboard/welcome.gif"
-    };
+      emptyGif: './images/dashboard/welcome.gif'
+    }
   },
   computed: {
-    ...mapGetters(["name", "avatar", "roles"]),
+    ...mapGetters(['name', 'avatar', 'roles']),
     timeSpanText() {
       // 获取当前时间
-      let timeNow = new Date(); // 获取当前小时
-      let hours = timeNow.getHours(); // 设置默认文字
-      let text = ``; // 判断当前时间段
+      const timeNow = new Date() // 获取当前小时
+      const hours = timeNow.getHours() // 设置默认文字
+      let text = `` // 判断当前时间段
       if (hours >= 0 && hours <= 10) {
-        text = `早上好`;
+        text = `早上好`
       } else if (hours > 10 && hours <= 14) {
-        text = `中午好`;
+        text = `中午好`
       } else if (hours > 14 && hours <= 18) {
-        text = `下午好`;
+        text = `下午好`
       } else if (hours > 18 && hours <= 24) {
-        text = `晚上好`;
+        text = `晚上好`
       } // 返回当前时间段对应的状态
-      return text;
+      return text
     }
   }
 }

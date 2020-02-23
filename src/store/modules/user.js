@@ -56,19 +56,18 @@ const actions = {
 
         const { roles, userName, descript } = data
 
-
         // roles must be a non-empty array
         // if (!roles || roles.length <= 0) {
         //   reject('getInfo: roles must be a non-null array!')
         // }
 
-        let user_roles = roles && roles.map((item) => {
-          return item.roleKey;
+        const user_roles = roles && roles.map((item) => {
+          return item.roleKey
         })
 
         commit('SET_ROLES', user_roles)
         commit('SET_NAME', userName)
-        commit('SET_AVATAR', "./images/avatar.gif")
+        commit('SET_AVATAR', './images/avatar.gif')
         commit('SET_INTRODUCTION', descript)
         resolve(data)
       }).catch(error => {

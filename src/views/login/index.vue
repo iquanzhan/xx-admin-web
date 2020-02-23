@@ -64,12 +64,10 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
-import SocialSign from './components/SocialSignin'
 
 export default {
-  name: "Login",
-  components: { LangSelect, SocialSign },
+  name: 'Login',
+  components: { },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -87,18 +85,18 @@ export default {
     }
     return {
       loginForm: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername }
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword }
+          { required: true, trigger: 'blur', validator: validatePassword }
         ]
       },
-      passwordType: "password",
+      passwordType: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
@@ -122,9 +120,9 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === "") {
+    if (this.loginForm.username === '') {
       this.$refs.username.focus()
-    } else if (this.loginForm.password === "") {
+    } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
   },
@@ -134,13 +132,13 @@ export default {
   methods: {
     checkCapslock(e) {
       const { key } = e
-      this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z"
+      this.capsTooltip = key && key.length === 1 && key >= 'A' && key <= 'Z'
     },
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = ""
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password"
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
@@ -151,10 +149,10 @@ export default {
         if (valid) {
           this.loading = true
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({
-                path: this.redirect || "/",
+                path: this.redirect || '/',
                 query: this.otherQuery
               })
               this.loading = false
@@ -163,14 +161,14 @@ export default {
               this.loading = false
             })
         } else {
-          console.log("error submit!!")
+          console.log('error submit!!')
           return false
         }
       })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== "redirect") {
+        if (cur !== 'redirect') {
           acc[cur] = query[cur]
         }
         return acc

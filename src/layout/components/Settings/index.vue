@@ -36,71 +36,71 @@
     </div>
     <div style="margin-top:25px;">
       <el-button plain style="width:100%" @click="resetGlobalSettings">
-        <i class="el-icon-position"></i>恢复默认设置
+        <i class="el-icon-position" />恢复默认设置
       </el-button>
     </div>
   </div>
 </template>
 
 <script>
-import ThemePicker from "@/components/ThemePicker";
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: { ThemePicker },
   data() {
-    return {};
+    return {}
   },
   computed: {
     isShowJob() {
-      return this.$store.getters.language === "zh";
+      return this.$store.getters.language === 'zh'
     },
     fixedHeader: {
       get() {
-        return this.$store.state.settings.fixedHeader;
+        return this.$store.state.settings.fixedHeader
       },
       set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "fixedHeader",
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'fixedHeader',
           value: val
-        });
+        })
       }
     },
     tagsView: {
       get() {
-        return this.$store.state.settings.tagsView;
+        return this.$store.state.settings.tagsView
       },
       set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "tagsView",
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'tagsView',
           value: val
-        });
+        })
       }
     },
     sidebarLogo: {
       get() {
-        return this.$store.state.settings.sidebarLogo;
+        return this.$store.state.settings.sidebarLogo
       },
       set(val) {
-        this.$store.dispatch("settings/changeSetting", {
-          key: "sidebarLogo",
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'sidebarLogo',
           value: val
-        });
+        })
       }
     }
   },
   methods: {
     themeChange(val) {
-      this.$store.dispatch("settings/changeSetting", {
-        key: "theme",
+      this.$store.dispatch('settings/changeSetting', {
+        key: 'theme',
         value: val
-      });
+      })
     },
-    //恢复默认主题设置
+    // 恢复默认主题设置
     resetGlobalSettings() {
-      this.$store.dispatch("settings/resetSetting");
+      this.$store.dispatch('settings/resetSetting')
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
