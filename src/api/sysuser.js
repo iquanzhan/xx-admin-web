@@ -1,41 +1,33 @@
-import request from '@/utils/request'
+import request from "@/utils/request";
 
 export function fetchList(query) {
   return request({
-    url: '/v1/sys-user',
-    method: 'get',
+    url: "/v1/sys-user",
+    method: "get",
     params: query
-  })
+  });
 }
 
-export function fetchArticle(id) {
+export function createUser(data) {
   return request({
-    url: '/vue-element-admin/article/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function fetchPv(pv) {
-  return request({
-    url: '/vue-element-admin/article/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
-export function createArticle(data) {
-  return request({
-    url: '/vue-element-admin/article/create',
-    method: 'post',
+    url: "/v1/sys-user",
+    method: "post",
     data
-  })
+  });
 }
 
-export function updateArticle(data) {
+export function updateUser(data) {
   return request({
-    url: '/vue-element-admin/article/update',
-    method: 'post',
+    url: `/v1/sys-user/${data.id}`,
+    method: "put",
     data
-  })
+  });
 }
+
+export function deleteUser(id) {
+  return request({
+    url: `/v1/sys-user/${id}`,
+    method: "delete"
+  });
+}
+
