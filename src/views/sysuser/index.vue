@@ -60,44 +60,39 @@
       style="width: 100%;"
     >
       <el-table-column label="序号" type="index" align="center" width="80" />
-      <el-table-column label="用户名" width="120px" align="center">
+      <el-table-column label="用户名" width="140px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" width="120px" align="center">
+
+      <el-table-column label="姓名" width="140px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.nickName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="90px" align="center">
+      <el-table-column label="性别" width="100px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.sex == 1 ? "男" : "女" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="出生日期" width="130px" align="center">
+      <el-table-column label="出生日期" width="160px" align="center">
         <template slot-scope="{ row }">
           <span>{{ $moment(row.birthday).format("YYYY-MM-DD") }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="手机号码" width="130px" align="center">
+      <el-table-column label="手机号码" width="150px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.telephone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="电子邮箱" width="180px" align="center">
+      <el-table-column label="电子邮箱" width="200px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注信息" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.descript }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="创建时间" width="180px" align="center">
+      <el-table-column label="创建时间" width="200px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.createTime }}</span>
         </template>
@@ -111,20 +106,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('table.status')"
-        class-name="status-col"
-        width="100"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.deleteStatus | statusFilter">
-            {{ row.deleteStatus == 0 ? "正常" : "已删除" }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
         :label="$t('table.actions')"
         align="center"
-        width="230"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row, $index }">
@@ -135,7 +118,13 @@
             编辑
           </el-button>
           <el-button
-            v-if="row.deleteStatus != 1"
+            size="mini"
+            type="warning"
+            @click="dispatchRole(row, $index)"
+          >
+            角色
+          </el-button>
+          <el-button
             size="mini"
             type="danger"
             @click="handleDelete(row, $index)"
@@ -215,11 +204,45 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="分配角色" :visible.sync="dispatchRoleVisible">
+      <div>
+        <h4>为【测试用户】分配角色</h4>
+        <el-form>
+          <el-form-item label="">
+            <el-checkbox-group v-model="userRole">
+              <el-checkbox
+                v-for="(item, index) in roleList"
+                :label="item.id"
+                :key="index"
+              >
+                {{ item.name }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dispatchRoleVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="dispatchUserRole">
+          确定
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList, createUser, updateUser, deleteUser } from "@/api/sysuser";
+import {
+  fetchList,
+  createUser,
+  updateUser,
+  deleteUser,
+  dispatchRole
+} from "@/api/sysuser";
+import { getRoles, getRoleByUserId } from "@/api/sysrole";
 import waves from "@/directive/waves";
 import Pagination from "@/components/Pagination";
 
@@ -289,7 +312,10 @@ export default {
           }
         ]
       },
-      downloadLoading: false
+      dispatchRoleVisible: false,
+      //分类角色相关
+      roleList: [],
+      userRole: []
     };
   },
   created() {
@@ -405,6 +431,46 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    /**分配角色 */
+    dispatchRole(row, index) {
+      //置空用户角色
+      this.userRole = [];
+      this.currentRow = {};
+
+      this.currentRow = row;
+      //查询角色信息
+      getRoles().then(data => {
+        this.roleList = data.data;
+      });
+      //设置当前用户角色
+      // this.userRole = row.roles
+      //   ? row.roles.map((item, index) => {
+      //       return item.id;
+      //     })
+      //   : [];
+      getRoleByUserId(this.currentRow.id).then(data => {
+        if (data.data) {
+          this.userRole = data.data.map((item, index) => {
+            return item.id;
+          });
+        }
+      });
+
+      //弹窗设置为显示
+      this.dispatchRoleVisible = true;
+    },
+    /**执行分配角色 */
+    dispatchUserRole() {
+      dispatchRole(this.currentRow.id, this.userRole).then(data => {
+        this.$notify({
+          title: "成功",
+          message: "分配角色成功",
+          type: "success",
+          duration: 2000
+        });
+        this.dispatchRoleVisible = false;
+      });
     }
   }
 };
