@@ -9,6 +9,15 @@ export function fetchList(query) {
   });
 }
 
+/**详情 */
+export function getDetails(id) {
+  return request({
+    url: `/v1/sys-user/${id}`,
+    method: "get"
+  });
+}
+
+
 /**添加用户 */
 export function createUser(data) {
   return request({
