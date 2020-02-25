@@ -28,10 +28,10 @@ export function getRoles() {
   });
 }
 
-/**根据用户Id获取角色列表 */
-export function getRoleByUserId(id) {
+/**根据角色Id获取角色列表 */
+export function getRoleByRoleId(id) {
   return request({
-    url: `/v1/sys-user/user/${id}`,
+    url: `/v1/sys-role/role/${id}`,
     method: "get"
   });
 }
@@ -42,3 +42,52 @@ export function getTreeRoles() {
     method: "get"
   });
 }
+
+/**添加角色 */
+export function createRole(data) {
+  return request({
+    url: "/v1/sys-role",
+    method: "post",
+    data
+  });
+}
+
+/**修改角色 */
+export function updateRole(data) {
+  return request({
+    url: `/v1/sys-role/${data.id}`,
+    method: "put",
+    data
+  });
+}
+
+/**删除角色 */
+export function deleteRole(id) {
+  return request({
+    url: `/v1/sys-role/${id}`,
+    method: "delete"
+  });
+}
+
+
+/**分配用户 */
+export function dispatchUser(id, data) {
+  return request({
+    url: `/v1/sys-role/user/${id}`,
+    method: "post",
+    data
+  });
+}
+
+/**分配资源 */
+export function dispatchResource(id, data) {
+  return request({
+    url: `/v1/sys-role/resource/${id}`,
+    method: "post",
+    data
+  });
+}
+
+
+
+

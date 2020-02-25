@@ -9,6 +9,15 @@ export function fetchList(query) {
   });
 }
 
+/**获取未删除的用户列表 */
+export function getUsers() {
+  return request({
+    url: "/v1/sys-user/all",
+    method: "get"
+  });
+}
+
+
 /**详情 */
 export function getDetails(id) {
   return request({
@@ -16,7 +25,6 @@ export function getDetails(id) {
     method: "get"
   });
 }
-
 
 /**添加用户 */
 export function createUser(data) {
@@ -45,10 +53,19 @@ export function deleteUser(id) {
 }
 
 /**分配角色 */
-export function dispatchRole(id,data) {
+export function dispatchRole(id, data) {
   return request({
     url: `/v1/sys-user/role/${id}`,
     method: "post",
     data
   });
 }
+
+/**根据角色Id获取角色列表 */
+export function getUserByRoleId(id) {
+  return request({
+    url: `/v1/sys-role/user/${id}`,
+    method: "get"
+  });
+}
+

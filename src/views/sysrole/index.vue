@@ -86,9 +86,16 @@
           <el-button
             size="mini"
             type="warning"
-            @click="dispatchRole(row, $index)"
+            @click="dispatchUser(row, $index)"
           >
-            角色
+            用户
+          </el-button>
+          <el-button
+            size="mini"
+            type="warning"
+            @click="dispatchResource(row, $index)"
+          >
+            资源
           </el-button>
           <el-button
             size="mini"
@@ -122,25 +129,35 @@
           <el-input v-model="temp.name" placeholder="请输入角色名称" />
         </el-form-item>
         <el-form-item label="角色KEY" prop="roleKey">
-          <el-input v-model="temp.roleKey" placeholder="请输入角色KEY" />
+          <el-input
+            v-model="temp.roleKey"
+            placeholder="请输入角色KEY"
+            :disabled="dialogStatus == 'update'"
+          />
         </el-form-item>
         <el-form-item label="父角色" prop="parentId">
           <selectTree
             :props="{
-              value: 'id'
+              value: 'id',
+              label: 'name'
             }"
-            :options="[
-              {
-                id: '1',
-                label: '123456',
-                children: [{ id: '2', label: '236985', children: [] }]
+            :options="roleTree"
+            :value="temp.parentId"
+            :accordion="true"
+            placeholder="请选择角色信息"
+            @getValue="
+              obj => {
+                temp.parentId = obj;
               }
-            ]"
-            :value="treeSelectRole"
+            "
           />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="temp.sort" placeholder="请输入排序" />
+          <el-input-number
+            v-model="temp.sort"
+            :min="1"
+            label="请输入排序"
+          ></el-input-number>
         </el-form-item>
 
         <el-form-item label="描述信息" prop="descript">
@@ -165,25 +182,48 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="分配角色" width="30%" :visible.sync="dispatchRoleVisible">
+    <el-dialog title="分配用户" width="30%" :visible.sync="dispatchUserVisible">
       <div>
-        <h4>为【<span v-text="currentRow.userName"></span>】分配角色</h4>
+        <h4>为【<span v-text="currentRow.name"></span>】分配用户</h4>
+        <el-checkbox-group v-model="userRole">
+          <el-checkbox
+            v-for="(item, index) in userList"
+            :label="item.id"
+            :key="index"
+          >
+            {{ "用户名：" + item.userName + "，" + "姓名：" + item.nickName }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dispatchUserVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="dispatchRoleUser">
+          确定
+        </el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="分配资源" width="30%" :visible.sync="dispatchResourceVisible">
+      <div>
+        <h4>为【<span v-text="currentRow.name"></span>】分配资源</h4>
         <el-tree
-          :data="roleTree"
+          :data="resourceTreeList"
           :default-expand-all="true"
           show-checkbox
           node-key="id"
-          :default-checked-keys="userRole"
+          :default-checked-keys="roleResource"
           :props="{ label: 'name' }"
-          ref="treeRole"
+          ref="treeResource"
         >
         </el-tree>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dispatchRoleVisible = false">
+        <el-button @click="dispatchResourceVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dispatchUserRole">
+        <el-button type="primary" @click="dispatchRoleResource">
           确定
         </el-button>
       </div>
@@ -198,8 +238,8 @@
           <el-form-item label="角色KEY">
             <span v-text="detailRole.roleKey"></span>
           </el-form-item>
-          <el-form-item label="父角色信息">
-            <span v-text="detailRole.parentId"></span>
+          <el-form-item label="所属父角色">
+            <span v-text="detailParentRole.name"></span>
           </el-form-item>
           <el-form-item label="排序">
             <span v-text="detailRole.sort"></span>
@@ -217,19 +257,21 @@
 </template>
 
 <script>
-import {
-  createUser,
-  updateUser,
-  deleteUser,
-  dispatchRole
-} from "@/api/sysuser";
+import { dispatchRole, getUserByRoleId, getUsers } from "@/api/sysuser";
 import {
   fetchList,
   getDetails,
   getRoles,
   getRoleByUserId,
-  getTreeRoles
+  getTreeRoles,
+  createRole,
+  updateRole,
+  deleteRole,
+  dispatchUser,
+  dispatchResource
 } from "@/api/sysrole";
+import { getResourceByRoleId ,getTreeResource} from "@/api/sysresource";
+
 import SelectTree from "@/components/SelectTree";
 import waves from "@/directive/waves";
 import Pagination from "@/components/Pagination";
@@ -262,7 +304,6 @@ export default {
         sortName: "createTime",
         sortOrder: "desc"
       },
-      statusOptions: ["published", "draft", "deleted"],
       temp: {
         id: undefined,
         name: "",
@@ -274,8 +315,8 @@ export default {
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        update: "编辑用户",
-        create: "添加用户"
+        update: "编辑角色",
+        create: "添加角色"
       },
       rules: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
@@ -288,20 +329,45 @@ export default {
         ]
       },
       currentRow: {},
-      dispatchRoleVisible: false,
+      dispatchUserVisible: false,
       //分类角色相关
       roleTree: [],
       userRole: [],
       /**用户详情Model */
       detailRole: {},
       dialogDetailVisible: false,
-      treeSelectRole: "2"
+      treeSelectRole: "2",
+      /**详情内的父角色信息 */
+      detailParentRole: {},
+      /**用户列表 */
+      userList: [],
+      /**分配资源相关 */
+      dispatchResourceVisible:false,
+      roleResource: [],
+      //资源树信息
+      resourceTreeList: []
     };
   },
   created() {
     this.getList();
   },
   methods: {
+    /**获取用户信息列表 */
+    getUsers() {
+      getUsers().then(data => {
+        if (data.data) {
+          this.userList = data.data;
+        }
+      });
+    },
+    //查询树形角色信息
+    getTreeRoles() {
+      getTreeRoles().then(data => {
+        if (data.data) {
+          this.roleTree = [data.data];
+        }
+      });
+    },
     /**格式化出生日期 */
     birthday(dateText) {
       return this.$moment(dateText).format("YYYY-MM-DD");
@@ -330,14 +396,11 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        userName: "",
-        nickName: "",
-        sex: 1,
-        birthday: new Date(),
-        telephone: "",
-        email: "",
-        address: "",
-        descript: ""
+        name: "",
+        roleKey: "",
+        descript: "",
+        parentId: "",
+        sort: ""
       };
     },
     /**点击创建时，弹框 */
@@ -348,12 +411,14 @@ export default {
       this.$nextTick(() => {
         this.$refs["dataForm"].clearValidate();
       });
+      //获取角色树信息
+      this.getTreeRoles();
     },
     /**发送请求执行创建 */
     createData() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
-          createUser(this.temp).then(data => {
+          createRole(this.temp).then(data => {
             this.list.unshift(data.data);
             this.dialogFormVisible = false;
             this.$notify({
@@ -375,13 +440,15 @@ export default {
       this.$nextTick(() => {
         this.$refs["dataForm"].clearValidate();
       });
+      //获取角色树信息
+      this.getTreeRoles();
     },
     /**发送请求执行编辑 */
     updateData() {
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp);
-          updateUser(tempData).then(data => {
+          updateRole(tempData).then(data => {
             let temp = data.data;
             const index = this.list.findIndex(v => v.id === temp.id);
             this.list.splice(index, 1, temp);
@@ -398,13 +465,13 @@ export default {
     },
     /**执行删除 */
     handleDelete(row, index) {
-      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该角色, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          deleteUser(row.id).then(data => {
+          deleteRole(row.id).then(data => {
             this.$notify({
               title: "成功",
               message: "删除成功",
@@ -416,20 +483,18 @@ export default {
         })
         .catch(() => {});
     },
-    /**分配角色 */
-    dispatchRole(row, index) {
-      //置空用户角色
+    /**分配用户信息 */
+    dispatchUser(row, index) {
+      //置空角色用户
       this.userRole = [];
       this.currentRow = {};
 
       this.currentRow = row;
-      //查询树形角色信息
-      getTreeRoles().then(data => {
-        if (data.data) {
-          this.roleTree = [data.data];
-        }
-      });
-      getRoleByUserId(this.currentRow.id).then(data => {
+
+      /**获取用户信息 */
+      this.getUsers();
+
+      getUserByRoleId(this.currentRow.id).then(data => {
         if (data.data) {
           this.userRole = data.data.map((item, index) => {
             return item.id;
@@ -438,21 +503,58 @@ export default {
       });
 
       //弹窗设置为显示
-      this.dispatchRoleVisible = true;
+      this.dispatchUserVisible = true;
     },
     /**执行分配角色 */
-    dispatchUserRole() {
-      dispatchRole(
-        this.currentRow.id,
-        this.$refs.treeRole.getCheckedKeys()
-      ).then(data => {
+    dispatchRoleUser() {
+      dispatchUser(this.currentRow.id, this.userRole).then(data => {
         this.$notify({
           title: "成功",
-          message: "分配角色成功",
+          message: "分配用户成功",
           type: "success",
           duration: 2000
         });
-        this.dispatchRoleVisible = false;
+        this.dispatchUserVisible = false;
+      });
+    },
+    /**分配资源 */
+    dispatchResource(row, index) {
+      //置空角色用户
+      this.roleResource = [];
+      this.currentRow = {};
+
+      this.currentRow = row;
+
+      //查询树形资源信息
+      getTreeResource().then(data => {
+        if (data.data) {
+          this.resourceTreeList = [data.data];
+        }
+      });
+      getResourceByRoleId(this.currentRow.id).then(data => {
+        if (data.data) {
+          this.roleResource = data.data.map((item, index) => {
+            return item.id;
+          });
+        }
+      });
+
+      //弹窗设置为显示
+      this.dispatchResourceVisible = true;
+    },
+    //执行分配资源
+    dispatchRoleResource(){
+       dispatchResource(
+        this.currentRow.id,
+        this.$refs.treeResource.getCheckedKeys()
+      ).then(data => {
+        this.$notify({
+          title: "成功",
+          message: "分配资源成功",
+          type: "success",
+          duration: 2000
+        });
+        this.dispatchResourceVisible = false;
       });
     },
     //显示详情信息
@@ -461,6 +563,14 @@ export default {
       getDetails(row.id).then(data => {
         this.detailRole = data.data;
         this.dialogDetailVisible = true;
+        let parentId = this.detailRole.parentId;
+        if (parentId == "0") {
+          this.detailParentRole = { id: 0, name: "根节点" };
+        } else {
+          getDetails(parentId).then(data => {
+            this.detailParentRole = data.data;
+          });
+        }
       });
     }
   }

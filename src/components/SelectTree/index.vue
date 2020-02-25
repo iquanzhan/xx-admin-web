@@ -1,5 +1,11 @@
 <template>
-  <el-select :value="valueTitle" :clearable="clearable" @clear="clearHandle">
+  <el-select
+    :value="valueTitle"
+    :clearable="clearable"
+    @clear="clearHandle"
+    :placeholder="placeholder"
+    :style="treeStyle"
+  >
     <el-option :value="valueTitle" :label="valueTitle">
       <el-tree
         id="tree-option"
@@ -31,6 +37,20 @@ export default {
         };
       }
     },
+    /**样式信息 */
+    treeStyle: {
+      type: String,
+      default: () => {
+        return "width:100%";
+      }
+    },
+    /**placeholder提示信息 */
+    placeholder: {
+      type: String,
+      default: () => {
+        return "请选择";
+      }
+    },
     /* 选项列表数据(树形结构的对象数组) */
     options: {
       type: Array,
@@ -40,7 +60,7 @@ export default {
     },
     /* 初始值 */
     value: {
-      type: Number,
+      type: String,
       default: () => {
         return null;
       }
@@ -74,12 +94,14 @@ export default {
     // 初始化值
     initHandle() {
       if (this.valueId) {
-        debugger;
         this.valueTitle = this.$refs.selectTree.getNode(this.valueId).data[
-          this.props.label||"label"
+          this.props.label || "label"
         ]; // 初始化显示
         this.$refs.selectTree.setCurrentKey(this.valueId); // 设置默认选中
         this.defaultExpandedKey = [this.valueId]; // 设置默认展开
+      } else {
+        this.valueTitle = "";
+        this.$refs.selectTree.setCurrentKey(null); // 设置默认选中
       }
       this.$nextTick(() => {
         let scrollWrap = document.querySelectorAll(
@@ -95,7 +117,7 @@ export default {
     },
     // 切换选项
     handleNodeClick(node) {
-      this.valueTitle = node[this.props.label||"label"];
+      this.valueTitle = node[this.props.label || "label"];
       this.valueId = node[this.props.value];
       this.$emit("getValue", this.valueId);
       this.defaultExpandedKey = [];
@@ -116,6 +138,7 @@ export default {
   },
   watch: {
     value() {
+      debugger;
       this.valueId = this.value;
       this.initHandle();
     }
