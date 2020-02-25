@@ -171,6 +171,18 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/sysrole',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sysrole/index'),
+        name: 'index',
+        meta: { title: '角色管理', icon: 'peoples', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/icon',
     component: Layout,
     children: [

@@ -2,29 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.userName"
-        placeholder="用户名"
+        v-model="listQuery.name"
+        placeholder="名称"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-input
-        v-model="listQuery.nickName"
-        placeholder="姓名"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-input
-        v-model="listQuery.telephone"
-        placeholder="手机号码"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-input
-        v-model="listQuery.email"
-        placeholder="电子邮箱"
+        v-model="listQuery.roleKey"
+        placeholder="角色KEY"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -59,49 +45,30 @@
       style="width: 100%;"
     >
       <el-table-column label="序号" type="index" align="center" width="80" />
-      <el-table-column label="用户名" width="140px" align="center">
+      <el-table-column label="名称" width="200px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.userName }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="姓名" width="140px" align="center">
+      <el-table-column label="角色KEY" width="230px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.nickName }}</span>
+          <span>{{ row.roleKey }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="100px" align="center">
+      <el-table-column label="排序" width="130px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.sex == 1 ? "男" : "女" }}</span>
+          <span>{{ row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="出生日期" width="160px" align="center">
+      <el-table-column label="描述信息" width="300px" align="center">
         <template slot-scope="{ row }">
-          <span>{{ $moment(row.birthday).format("YYYY-MM-DD") }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="手机号码" width="150px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.telephone }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="电子邮箱" width="200px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.email }}</span>
+          <span>{{ row.descript }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="200px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.createTime }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="是否锁定" class-name="status-col" width="100">
-        <template slot-scope="{ row }">
-          <el-tag :type="row.locked | statusFilter">
-            {{ row.locked == 0 ? "否" : "是" }}
-          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -148,46 +115,40 @@
         :rules="rules"
         :model="temp"
         label-position="left"
-        label-width="70px"
+        label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="temp.userName" placeholder="请输入用户名" />
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="temp.name" placeholder="请输入角色名称" />
         </el-form-item>
-        <el-form-item label="姓名" prop="nickName">
-          <el-input v-model="temp.nickName" placeholder="请输入姓名" />
+        <el-form-item label="角色KEY" prop="roleKey">
+          <el-input v-model="temp.roleKey" placeholder="请输入角色KEY" />
         </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <template>
-            <el-radio-group v-model="temp.sex">
-              <el-radio :label="1">男</el-radio>
-              <el-radio :label="0">女</el-radio>
-            </el-radio-group>
-          </template>
+        <el-form-item label="父角色" prop="parentId">
+          <selectTree
+            :props="{
+              value: 'id'
+            }"
+            :options="[
+              {
+                id: '1',
+                label: '123456',
+                children: [{ id: '2', label: '236985', children: [] }]
+              }
+            ]"
+            :value="treeSelectRole"
+          />
         </el-form-item>
-        <el-form-item label="出生日期" prop="birthday">
-          <el-date-picker
-            v-model="temp.birthday"
-            type="date"
-            placeholder="选择日期"
-          >
-          </el-date-picker>
+        <el-form-item label="排序" prop="sort">
+          <el-input v-model="temp.sort" placeholder="请输入排序" />
         </el-form-item>
-        <el-form-item label="手机号码" prop="telephone">
-          <el-input v-model="temp.telephone" placeholder="请输入手机号码" />
-        </el-form-item>
-        <el-form-item label="电子邮箱" prop="email">
-          <el-input v-model="temp.email" placeholder="请输入电子邮箱" />
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="temp.address" placeholder="请输入地址信息" />
-        </el-form-item>
-        <el-form-item label="备注信息">
+
+        <el-form-item label="描述信息" prop="descript">
           <el-input
             v-model="temp.descript"
             :autosize="{ minRows: 2, maxRows: 4 }"
             type="textarea"
-            placeholder="请输入备注信息"
+            placeholder="请输入描述信息"
           />
         </el-form-item>
       </el-form>
@@ -228,39 +189,26 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="用户信息" :visible.sync="dialogDetailVisible">
+    <el-dialog title="角色信息" :visible.sync="dialogDetailVisible">
       <div>
         <el-form label-width="100px" label-suffix="：">
-          <el-form-item label="用户名">
-            <span v-text="detailUser.userName"></span>
+          <el-form-item label="角色名">
+            <span v-text="detailRole.name"></span>
           </el-form-item>
-          <el-form-item label="姓名">
-            <span v-text="detailUser.nickName"></span>
+          <el-form-item label="角色KEY">
+            <span v-text="detailRole.roleKey"></span>
           </el-form-item>
-          <el-form-item label="性别">
-            <span v-text="detailUser.sex == 0 ? '女' : '男'"></span>
+          <el-form-item label="父角色信息">
+            <span v-text="detailRole.parentId"></span>
           </el-form-item>
-          <el-form-item label="出生日期">
-            <span v-text="birthday(detailUser.birthday)"></span>
+          <el-form-item label="排序">
+            <span v-text="detailRole.sort"></span>
           </el-form-item>
-          <el-form-item label="手机号码">
-            <span v-text="detailUser.telephone"></span>
-          </el-form-item>
-          <el-form-item label="电子邮箱">
-            <span v-text="detailUser.email"></span>
+          <el-form-item label="描述信息">
+            <span v-text="detailRole.descript"></span>
           </el-form-item>
           <el-form-item label="创建时间">
-            <span v-text="detailUser.createTime"></span>
-          </el-form-item>
-          <el-form-item label="锁定状态">
-            <el-tag v-if="detailUser.locked == 0" type="success">未锁定</el-tag>
-            <el-tag v-else type="danger">已锁定</el-tag>
-          </el-form-item>
-          <el-form-item label="地址">
-            <span v-text="detailUser.address"></span>
-          </el-form-item>
-          <el-form-item label="备注信息">
-            <span v-text="detailUser.descript"></span>
+            <span v-text="detailRole.createTime"></span>
           </el-form-item>
         </el-form>
       </div>
@@ -270,21 +218,25 @@
 
 <script>
 import {
-  fetchList,
   createUser,
   updateUser,
   deleteUser,
-  dispatchRole,
-  getDetails
+  dispatchRole
 } from "@/api/sysuser";
-import { getRoles, getRoleByUserId, getTreeRoles } from "@/api/sysrole";
-import SimpleTable from "@/components/SimpleTable";
+import {
+  fetchList,
+  getDetails,
+  getRoles,
+  getRoleByUserId,
+  getTreeRoles
+} from "@/api/sysrole";
+import SelectTree from "@/components/SelectTree";
 import waves from "@/directive/waves";
 import Pagination from "@/components/Pagination";
 
 export default {
-  name: "SysUser",
-  components: { Pagination, SimpleTable },
+  name: "SysRole",
+  components: { Pagination, SelectTree },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -313,14 +265,11 @@ export default {
       statusOptions: ["published", "draft", "deleted"],
       temp: {
         id: undefined,
-        userName: "",
-        nickName: "",
-        sex: 1,
-        birthday: new Date(),
-        telephone: "",
-        email: "",
-        address: "",
-        descript: ""
+        name: "",
+        roleKey: "",
+        descript: "",
+        parentId: "",
+        sort: ""
       },
       dialogFormVisible: false,
       dialogStatus: "",
@@ -329,29 +278,12 @@ export default {
         create: "添加用户"
       },
       rules: {
-        userName: [
-          { required: true, message: "请输入用户名", trigger: "blur" }
-        ],
-        nickName: [
+        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        roleKey: [
           {
             required: true,
             trigger: "blur",
-            message: "请输入正确的手机号码"
-          }
-        ],
-        telephone: [
-          {
-            type: "string",
-            pattern: /1\d{10}/,
-            trigger: "blur",
-            message: "请输入正确的手机号码"
-          }
-        ],
-        email: [
-          {
-            type: "email",
-            trigger: "blur",
-            message: "请输入正确的电子邮箱"
+            message: "请输入正确的角色KEY"
           }
         ]
       },
@@ -361,8 +293,9 @@ export default {
       roleTree: [],
       userRole: [],
       /**用户详情Model */
-      detailUser: {},
-      dialogDetailVisible: false
+      detailRole: {},
+      dialogDetailVisible: false,
+      treeSelectRole: "2"
     };
   },
   created() {
@@ -524,9 +457,9 @@ export default {
     },
     //显示详情信息
     showDetailDialog(row) {
-      this.detailUser = {};
+      this.detailRole = {};
       getDetails(row.id).then(data => {
-        this.detailUser = data.data;
+        this.detailRole = data.data;
         this.dialogDetailVisible = true;
       });
     }
