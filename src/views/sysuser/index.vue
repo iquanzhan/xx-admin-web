@@ -208,6 +208,7 @@
       <div>
         <h4>为【<span v-text="currentRow.userName"></span>】分配角色</h4>
         <el-tree
+          v-loading="roleTreeLoading"
           :data="roleTree"
           :default-expand-all="true"
           show-checkbox
@@ -230,7 +231,7 @@
 
     <el-dialog title="用户信息" :visible.sync="dialogDetailVisible">
       <div>
-        <el-form label-width="100px" label-suffix="：">
+        <el-form v-loading="detailLoading" label-width="100px" label-suffix="：">
           <el-form-item label="用户名">
             <span v-text="detailUser.userName"></span>
           </el-form-item>
@@ -362,7 +363,11 @@ export default {
       userRole: [],
       /**用户详情Model */
       detailUser: {},
-      dialogDetailVisible: false
+      dialogDetailVisible: false,
+      //用户详情的loading
+      detailLoading: true,
+      //角色树loading
+      roleTreeLoading: true
     };
   },
   created() {
@@ -485,13 +490,21 @@ export default {
     },
     /**分配角色 */
     dispatchRole(row, index) {
+      //弹窗设置为显示
+      this.dispatchRoleVisible = true;
+
       //置空用户角色
       this.userRole = [];
       this.currentRow = {};
 
       this.currentRow = row;
+      this.roleTreeLoading = true;
       //查询树形角色信息
       getTreeRoles().then(data => {
+        setTimeout(() => {
+          this.roleTreeLoading = false;
+        }, 0.8 * 1000);
+
         if (data.data) {
           this.roleTree = [data.data];
         }
@@ -503,9 +516,6 @@ export default {
           });
         }
       });
-
-      //弹窗设置为显示
-      this.dispatchRoleVisible = true;
     },
     /**执行分配角色 */
     dispatchUserRole() {
@@ -525,9 +535,15 @@ export default {
     //显示详情信息
     showDetailDialog(row) {
       this.detailUser = {};
+      this.detailLoading = true;
+      this.dialogDetailVisible = true;
       getDetails(row.id).then(data => {
+        debugger;
+        setTimeout(() => {
+          this.detailLoading = false;
+        }, 0.8 * 1000);
+
         this.detailUser = data.data;
-        this.dialogDetailVisible = true;
       });
     }
   }

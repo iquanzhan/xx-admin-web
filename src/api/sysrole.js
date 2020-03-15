@@ -88,6 +88,16 @@ export function dispatchResource(id, data) {
   });
 }
 
+/**根据用户Id获取角色信息 */
+export function getRoleByUserId(id) {
+  return request({
+    url: `/v1/sys-user/user/${id}`,
+    method: "get"
+  });
+}
+
+
+
 
 
 
