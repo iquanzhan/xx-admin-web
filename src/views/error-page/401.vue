@@ -8,6 +8,7 @@
         <h1 class="text-jumbo text-ginormous">
           Oops!
         </h1>
+        gif来源<a href="https://zh.airbnb.com/" target="_blank">airbnb</a> 页面
         <h2>你没有权限去该页面</h2>
         <h6>如有不满请联系你领导</h6>
         <ul class="list-unstyled">
@@ -18,7 +19,7 @@
             </router-link>
           </li>
           <li class="link-type">
-            <a href="#">邮箱系统</a>
+            <a href="https://www.taobao.com/">随便看看</a>
           </li>
           <li><a href="#" @click.prevent="dialogVisible=true">点我看图</a></li>
         </ul>
@@ -35,14 +36,13 @@
 
 <script>
 import errGif from '@/assets/401_images/401.gif'
-import kankanGif from '@/assets/401_images/kankan.gif'
 
 export default {
   name: 'Page401',
   data() {
     return {
       errGif: errGif + '?' + +new Date(),
-      ewizardClap: kankanGif,
+      ewizardClap: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
       dialogVisible: false
     }
   },

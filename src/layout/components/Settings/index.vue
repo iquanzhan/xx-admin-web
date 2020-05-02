@@ -5,10 +5,7 @@
 
       <div class="drawer-item">
         <span>{{ $t('settings.theme') }}</span>
-        <theme-picker
-          style="float: right;height: 26px;margin: -3px 8px 0 0;"
-          @change="themeChange"
-        />
+        <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
       </div>
 
       <div class="drawer-item">
@@ -25,19 +22,14 @@
         <span>{{ $t('settings.sidebarLogo') }}</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
-      <a
-        v-if="isShowJob"
-        href="https://panjiachen.github.io/vue-element-admin-site/zh/job/"
-        target="_blank"
-        class="job-link"
-      >
-        <el-alert title="部门目前非常缺人！有兴趣的可以点击了解详情。坐标: 字节跳动" type="success" :closable="false" />
+      <a v-if="isShowJob" href="https://panjiachen.github.io/vue-element-admin-site/zh/job/" target="_blank" class="job-link">
+        <el-alert
+          title="部门目前非常缺人！有兴趣的可以点击了解详情。坐标: 字节跳动"
+          type="success"
+          :closable="false"
+        />
       </a>
-    </div>
-    <div style="margin-top:25px;">
-      <el-button plain style="width:100%" @click="resetGlobalSettings">
-        <i class="el-icon-position" />恢复默认设置
-      </el-button>
+
     </div>
   </div>
 </template>
@@ -94,10 +86,6 @@ export default {
         key: 'theme',
         value: val
       })
-    },
-    // 恢复默认主题设置
-    resetGlobalSettings() {
-      this.$store.dispatch('settings/resetSetting')
     }
   }
 }
@@ -112,22 +100,22 @@ export default {
 
   .drawer-title {
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, 0.85);
+    color: rgba(0, 0, 0, .85);
     font-size: 14px;
     line-height: 22px;
   }
 
   .drawer-item {
-    color: rgba(0, 0, 0, 0.65);
+    color: rgba(0, 0, 0, .65);
     font-size: 14px;
     padding: 12px 0;
   }
 
   .drawer-switch {
-    float: right;
+    float: right
   }
 
-  .job-link {
+  .job-link{
     display: block;
     position: absolute;
     width: 100%;

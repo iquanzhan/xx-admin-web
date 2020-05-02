@@ -84,6 +84,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/documentation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/documentation/index'),
+        name: 'Documentation',
+        meta: { title: 'documentation', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
@@ -158,30 +170,7 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/sysuser',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/sysuser/index'),
-        name: 'index',
-        meta: { title: '用户管理', icon: 'user', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/sysrole',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/sysrole/index'),
-        name: 'index',
-        meta: { title: '角色管理', icon: 'peoples', noCache: true }
-      }
-    ]
-  },
+
   {
     path: '/icon',
     component: Layout,
@@ -221,11 +210,7 @@ export const asyncRoutes = [
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/example/edit'),
         name: 'EditArticle',
-        meta: {
-          title: 'editArticle',
-          noCache: true,
-          activeMenu: '/example/list'
-        },
+        meta: { title: 'editArticle', noCache: true, activeMenu: '/example/list' },
         hidden: true
       },
       {
@@ -400,19 +385,30 @@ export const asyncRoutes = [
     ]
   },
 
+  {
+    path: 'external-link',
+    component: Layout,
+    children: [
+      {
+        path: 'https://github.com/PanJiaChen/vue-element-admin',
+        meta: { title: 'externalLink', icon: 'link' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () =>
-  new Router({
-    // mode: 'history', // require service support
-    scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes
-  })
+const createRouter = () => new Router({
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRoutes
+})
 
 const router = createRouter()
 
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

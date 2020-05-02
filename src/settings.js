@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'XXADMIN通用权限管理系统',
+  title: 'Vue Element Admin',
 
   /**
    * @type {boolean} true | false
