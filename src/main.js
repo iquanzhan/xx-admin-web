@@ -16,6 +16,7 @@ import router from './router'
 import i18n from './lang' // internationalization
 import './icons' // icon
 import './permission' // permission control
+import { hasBtnPermission } from './utils/permission' // button permission
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
@@ -44,6 +45,7 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+Vue.prototype.hasPerm = hasBtnPermission
 
 new Vue({
   el: '#app',
