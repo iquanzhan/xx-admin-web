@@ -12,7 +12,7 @@ export function login(data) {
 // 获取用户信息
 export function getInfo(token) {
   return request({
-    url: '/admin/acl/index/info',
+    url: '/admin/index/info',
     method: 'get',
     params: { token }
   })
@@ -21,7 +21,7 @@ export function getInfo(token) {
 // 登出
 export function logout() {
   return request({
-    url: '/admin/acl/index/logout',
+    url: '/admin/index/logout',
     method: 'post'
   })
 }
@@ -29,7 +29,7 @@ export function logout() {
 // 获取菜单权限数据
 export function getMenu() {
   return request({
-    url: '/admin/acl/index/menu',
+    url: '/admin/index/menu',
     method: 'get'
   })
 }

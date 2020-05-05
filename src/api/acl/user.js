@@ -1,25 +1,25 @@
 import request from '@/utils/request'
 
-const api_name = '/admin/acl/user'
+const api_name = '/user'
 
 export default {
   getPageList(page, limit, searchObj) {
     return request({
       url: `${api_name}/${page}/${limit}`,
       method: 'get',
-      params: searchObj // url查询字符串或表单键值对
+      params: searchObj
     })
   },
   getById(id) {
     return request({
-      url: `${api_name}/get/${id}`,
+      url: `${api_name}/${id}`,
       method: 'get'
     })
   },
 
   save(user) {
     return request({
-      url: `${api_name}/save`,
+      url: `${api_name}`,
       method: 'post',
       data: user
     })
@@ -27,7 +27,7 @@ export default {
 
   updateById(user) {
     return request({
-      url: `${api_name}/update`,
+      url: `${api_name}/${user.id}`,
       method: 'put',
       data: user
     })
@@ -47,7 +47,7 @@ export default {
   },
   removeById(id) {
     return request({
-      url: `${api_name}/remove/${id}`,
+      url: `${api_name}/${id}`,
       method: 'delete'
     })
   },

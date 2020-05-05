@@ -84,31 +84,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
-  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -393,76 +368,6 @@ export const asyncRoutes = [
         path: 'https://github.com/PanJiaChen/vue-element-admin',
         meta: { title: 'externalLink', icon: 'link' }
       }
-    ]
-  },
-  {
-    path: '/acl',
-    component: Layout,
-    redirect: '/acl/user/list',
-    name: '权限管理',
-    meta: { title: '权限管理', icon: 'chart' },
-    children: [
-      {
-        path: 'user/list',
-        name: '用户管理',
-        component: () => import('@/views/acl/user/list'),
-        meta: { title: '用户管理' }
-      },
-      {
-        path: 'role/list',
-        name: '角色管理',
-        component: () => import('@/views/acl/role/list'),
-        meta: { title: '角色管理' }
-      },
-      {
-        path: 'role/form',
-        name: '角色添加',
-        component: () => import('@/views/acl/role/form'),
-        meta: { title: '角色添加' },
-        hidden: true
-      },
-      {
-        path: 'role/update/:id',
-        name: '角色修改',
-        component: () => import('@/views/acl/role/form'),
-        meta: { title: '角色修改' },
-        hidden: true
-      },
-      {
-        path: 'role/distribution/:id',
-        name: '角色权限',
-        component: () => import('@/views/acl/role/roleForm'),
-        meta: { title: '角色权限' },
-        hidden: true
-      },
-      {
-        path: 'menu/list',
-        name: '菜单管理',
-        component: () => import('@/views/acl/menu/list'),
-        meta: { title: '菜单管理' }
-      },
-      {
-        path: 'user/add',
-        name: '用户添加',
-        component: () => import('@/views/acl/user/form'),
-        meta: { title: '用户添加' },
-        hidden: true
-      },
-      {
-        path: 'user/update/:id',
-        name: '用户修改',
-        component: () => import('@/views/acl/user/form'),
-        meta: { title: '用户修改' },
-        hidden: true
-      },
-      {
-        path: 'user/role/:id',
-        name: '用户角色',
-        component: () => import('@/views/acl/user/roleForm'),
-        meta: { title: '用户角色' },
-        hidden: true
-      }
-
     ]
   },
   // 404 page must be placed at the end !!!

@@ -15,7 +15,6 @@
 
 import userApi from '@/api/acl/user'
 
-// const cityOptions = ['上海', '北京', '广州', '深圳'];
 
 export default {
   data() {
@@ -72,13 +71,11 @@ export default {
       console.log(ids)
       // 修改权限
       userApi.saveAssign(this.userId, ids).then(response => {
-        if (response.success) {
-          this.$message({
+        this.$message({
             type: 'success',
             message: '保存成功'
           })
-          this.$router.push({ path: '/acl/user/list' })
-        }
+          this.$router.push({ path: '/user/list' })
       })
     }
   }
